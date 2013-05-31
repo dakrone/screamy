@@ -8,6 +8,11 @@ libnotify and growl notifications from Immutant queues
 $ lein immutant deploy
 ```
 
+```
+$ curl localhost:8080/screamy -d'this is a message'
+```
+
+
 Then publish messages to `queue.notifications`.
 
 Requires `notify-send` or `growlnotify` on your $PATH.
