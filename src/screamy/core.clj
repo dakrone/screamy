@@ -17,7 +17,7 @@
            "--urgency=normal"
            "--expire-time=5000"
            "--app-name=Screamy"
-           (pr-str body))))
+           (str body))))
 
 (defn growlnotify
   [body & [summary]]
