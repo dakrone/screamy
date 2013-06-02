@@ -18,6 +18,7 @@
            "--urgency=normal"
            "--expire-time=5000"
            "--app-name=Screamy"
+           "MCP"
            (str body))))
 
 (defn growlnotify
