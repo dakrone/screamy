@@ -1,6 +1,7 @@
 (ns screamy.core
   (:require [clojure.java.io :refer [file resource]]
             [clojure.java.shell :as sh]
+            [clojure.tools.logging :as log]
             [immutant.messaging :as msg]))
 
 (def notify-send-cmd "notify-send")
@@ -33,12 +34,12 @@
 (defn notify
   "Basic notify method"
   [msg & [opts]]
-  (println "Notify Message:" msg)
+  (log/info "Notify message:" msg)
   (cond
    notify-enabled? (notify-send msg)
    growl-enabled? (growlnotify msg)
    :else
-   (println "Unable to notify (neither growlnotify nor notify-send found)")))
+   (log/warn "Unable to notify (neither growlnotify nor notify-send found)")))
 
 (defn notify-handler
   "Handler for enqueuing notification messages"
