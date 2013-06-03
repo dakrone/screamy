@@ -1,5 +1,6 @@
 (ns screamy.core
-  (:require [clojure.java.shell :as sh]
+  (:require [clojure.java.io :refer [file resource]]
+            [clojure.java.shell :as sh]
             [immutant.messaging :as msg]))
 
 (def notify-send-cmd "notify-send")
@@ -11,12 +12,14 @@
 (defonce growl-enabled?
   (= 0 (:exit (sh/sh "which" "growlnotify"))))
 
+(def icon "immutant.png")
+
 (defn notify-send
   [body & [summary]]
   (when notify-enabled?
     (sh/sh notify-send-cmd
            "--urgency=normal"
-           "--expire-time=5000"
+           (str "--icon=" (.getAbsolutePath (file (resource icon))))
            "--app-name=Screamy"
            "MCP"
            (str body))))
