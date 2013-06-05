@@ -7,7 +7,8 @@
 
 ;; Create and notify on notification queue
 (msg/start notify-queue)
-(msg/listen notify-queue screamy.core/notify)
+(msg/listen notify-queue screamy.core/notify
+            :concurrency 4)
 
 ;; Set up HTTP notification handler
 (web/start "/"
