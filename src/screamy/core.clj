@@ -5,6 +5,7 @@
             [immutant.messaging :as msg]))
 
 (def notify-send-cmd "notify-send")
+(def terminal-notifier-cmd "terminal-notifier")
 (def growlnotify-cmd "growlnotify")
 
 (defonce notify-enabled?
@@ -12,6 +13,9 @@
 
 (defonce growl-enabled?
   (= 0 (:exit (sh/sh "which" "growlnotify"))))
+
+(defonce terminal-notifier-enabled?
+  (= 0 (:exit (sh/sh "which" "terminal-notifier"))))
 
 (def icon "immutant.png")
 
@@ -25,6 +29,15 @@
            "MCP"
            (str body))))
 
+(defn terminal-notifier
+  [body & [summary]]
+  (when terminal-notifier-enabled?
+    (sh/sh terminal-notifier-cmd
+           "-title"
+           "MCP"
+           "-message"
+           (str body))))
+
 (defn growlnotify
   [body & [summary]]
   (when growl-enabled?
@@ -36,10 +49,11 @@
   [msg & [opts]]
   (log/info "Notify message:" msg)
   (cond
+   terminal-notifier-enabled? (terminal-notifier msg)
    notify-enabled? (notify-send msg)
    growl-enabled? (growlnotify msg)
    :else
-   (log/warn "Unable to notify (neither growlnotify nor notify-send found)")))
+   (log/warn "Unable to notify (no sending method found)")))
 
 (defn notify-handler
   "Handler for enqueuing notification messages"
